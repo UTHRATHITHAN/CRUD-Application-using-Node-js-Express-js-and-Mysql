@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+<body>
+   
+
+<h1 class="text-center mt-3 mb-3" > <%= title %> </h1>
+    
+   
+  
+    <div class="card" >
+        <div class="Container" style="padding-left: 50px"><p class=" text-primary-3 mb-3" >Search</p><input  type="text" id="autocomplete-Search" placeholder=" search" class="text-primary-3 mb-3 "/>
+          
+        </div><br>
+        
+        <div class="card-header">Employee Salary Management details</div>
+        <div class="card-body">
+           
+                <div class="col"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div><%= title %></div>
+                <br>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Employee Id</th>
+                        <th>Department/Team</th>
+                        <th>Sex</th>
+                        <th>MaritalStatus</th>
+                        <th>Salary</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                    <%
+                    if(sampleData.length > 0)
+                    {
+                        sampleData.forEach(function(data){
+                    %>
+                    <tr>
+                        <td><%= data.Employee_Name %></td>
+                        <td><%= data.Employee_ID %></td>
+                        <td><%= data.Department_Team %></td>
+                        <td><%= data.Sex_ %></td>
+                        <td><%= data.Marital_Status %></td>
+                        <td><%= data.Salary_ %></td>
+                        <td><%= data.Address_ %></td>
+                        <td>
+                          <a href="/edit/<%= data.Employee_ID%>"
+                            class="btn btn-primary btn-sm">Edit</a> </a> 
+                            <a href="/delete/<%= data.Employee_ID %>"
+                                class="btn btn-danger btn-sm">Delete </a> 
+    
+
+                        </td>
+                    </tr>
+                    <%
+                        });
+                    }
+                    else
+                    {
+                    %>
+                    <tr>
+                        <td colspan="8">No Data Found</td>
+                    </tr>
+                    <%
+                    }
+                    %>
+                </table>
+            </div>
+
+            
+       
+        </div>
+      
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+        function load_data(query = '')
+        {
+            fetch('/data_search?search_query='+query+'').then(function(response){
+                return response.json();
+            }).then(function(responseData){
+                var html = '<ul class="list-group">';
+                if(responseData.length > 0)
+                {
+                    for(var count = 0; count < responseData.length; count++)
+                    {
+                        var regular_expression = new RegExp('('+query+')', 'gi');
+                        html += '<a href="#" class="list-group-item list-group-item-action" onclick="get_text(this)">'+responseData[count].country_name.replace(regular_expression, '<span class="text-primary fw-bold">$1</span>')+'</a>';
+                    }
+                }
+                else
+                {
+                    html += '<a href="#" class="list-group-item list-group-item-action disabled">No Data Found</a>';
+                }
+                html += '</ul>';
+                document.getElementById('search_result').innerHTML = html;
+            });
+        }
+        var search_element = document.getElementById("autocomplete_search");
+        search_element.onkeyup = function(){
+            var query = search_element.value;
+            load_data(query);
+        };
+        search_element.onfocus = function(){
+            var query = search_element.value;
+            load_data(query);
+        };
+        function get_text(event)
+        {
+            var country_name = event.textContent;
+            console.log(country_name);
+            document.getElementById('autocomplete_search').value = country_name;
+            document.getElementById('search_result').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
